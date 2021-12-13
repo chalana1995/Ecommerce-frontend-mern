@@ -1,7 +1,17 @@
 import React from "react";
+import Layout from "../core/Layout";
 
 function Signup() {
-  return <div>Sign Up</div>;
+  return (
+    <>
+      <Layout
+        title="Signup page"
+        description="Signup Node react e commerce app"
+      >
+        ...
+      </Layout>
+    </>
+  );
 }
 
 export default Signup;
