@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import Layout from "../core/Layout";
+import { API } from "../config";
+import axios from "axios";
 
 function Signup() {
   const [values, setValues] = useState({
@@ -10,8 +12,32 @@ function Signup() {
     success: false,
   });
 
+  const { name, email, password } = values;
+
   const handleChange = (name) => (event) => {
     setValues({ ...values, error: false, [name]: event.target.value });
+  };
+
+  const signUp = async (user) => {
+    fetch(`${API}/signup`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user),
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .catch((err) => {
+        console.log("==== error", err);
+      });
+  };
+
+  const clickSubmit = (e) => {
+    e.preventDefault();
+    signUp({ name, email, password });
   };
 
   const signUpForm = () => (
@@ -40,7 +66,9 @@ function Signup() {
           className="form-control"
         />
       </div>
-      <button className="btn btn-primary mt-2">Submit</button>
+      <button onClick={clickSubmit} className="btn btn-primary mt-2">
+        Submit
+      </button>
     </form>
   );
 
