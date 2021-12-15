@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Layout from "../core/Layout";
-import { API } from "../config";
-import axios from "axios";
+import { signUp } from "../auth";
 import { Link } from "react-router-dom";
 
 function Signup() {
@@ -17,23 +16,6 @@ function Signup() {
 
   const handleChange = (name) => (event) => {
     setValues({ ...values, error: false, [name]: event.target.value });
-  };
-
-  const signUp = async (user) => {
-    return fetch(`${API}/signup`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(user),
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .catch((err) => {
-        console.log("==== error", err);
-      });
   };
 
   const clickSubmit = (e) => {
