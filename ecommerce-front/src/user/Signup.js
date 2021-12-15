@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Layout from "../core/Layout";
 import { API } from "../config";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 function Signup() {
   const [values, setValues] = useState({
@@ -12,14 +13,14 @@ function Signup() {
     success: false,
   });
 
-  const { name, email, password } = values;
+  const { name, email, password, error, success } = values;
 
   const handleChange = (name) => (event) => {
     setValues({ ...values, error: false, [name]: event.target.value });
   };
 
   const signUp = async (user) => {
-    fetch(`${API}/signup`, {
+    return fetch(`${API}/signup`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -37,7 +38,21 @@ function Signup() {
 
   const clickSubmit = (e) => {
     e.preventDefault();
-    signUp({ name, email, password });
+    setValues({ ...values, error: false });
+    signUp({ name, email, password }).then((data) => {
+      if (data.error) {
+        setValues({ ...values, error: data.error, success: false });
+      } else {
+        setValues({
+          ...values,
+          email: "",
+          name: "",
+          password: "",
+          error: "",
+          success: true,
+        });
+      }
+    });
   };
 
   const signUpForm = () => (
@@ -48,6 +63,7 @@ function Signup() {
           onChange={handleChange("name")}
           type="text"
           className="form-control"
+          value={name}
         />
       </div>
       <div className="form-group">
@@ -56,6 +72,7 @@ function Signup() {
           onChange={handleChange("email")}
           type="email"
           className="form-control"
+          value={email}
         />
       </div>
       <div className="form-group">
@@ -64,12 +81,31 @@ function Signup() {
           onChange={handleChange("password")}
           type="password"
           className="form-control"
+          value={password}
         />
       </div>
       <button onClick={clickSubmit} className="btn btn-primary mt-2">
         Submit
       </button>
     </form>
+  );
+
+  const showError = () => (
+    <div
+      className="alert alert-danger"
+      style={{ display: error ? "" : "none" }}
+    >
+      {error}
+    </div>
+  );
+
+  const showSuccess = () => (
+    <div
+      className="alert alert-info"
+      style={{ display: success ? "" : "none" }}
+    >
+      New account is created, Please <Link to="/signin">SignIn</Link>
+    </div>
   );
 
   return (
@@ -79,6 +115,8 @@ function Signup() {
         description="Signup Node react e commerce app"
         className="container col-md-8 offset-md-2"
       >
+        {showError()}
+        {showSuccess()}
         {signUpForm()}
       </Layout>
     </>
