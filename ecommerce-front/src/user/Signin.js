@@ -76,7 +76,6 @@ function Signin() {
   };
 
   const reidrectUser = () => {
-    console.log("=====redirect=====", redirectToReferrer);
     if (redirectToReferrer) {
       return <Redirect to="/" />;
     }
