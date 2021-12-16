@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Layout from "../core/Layout";
-import { signIn } from "../auth";
+import { signIn, authenticate } from "../auth";
 import { Redirect } from "react-router-dom";
 
 function Signin() {
@@ -26,9 +26,11 @@ function Signin() {
       if (data.err) {
         setValues({ ...values, error: data.err, loading: false });
       } else {
-        setValues({
-          ...values,
-          redirectToReferrer: true,
+        authenticate(data, () => {
+          setValues({
+            ...values,
+            redirectToReferrer: true,
+          });
         });
       }
     });
@@ -74,6 +76,7 @@ function Signin() {
   };
 
   const reidrectUser = () => {
+    console.log("=====redirect=====", redirectToReferrer);
     if (redirectToReferrer) {
       return <Redirect to="/" />;
     }
